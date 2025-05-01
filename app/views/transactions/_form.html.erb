@@ -1,0 +1,115 @@
+<%= form_with(model: transaction, local: true, class: 'transaction-form') do |f| %>
+  <% if transaction.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(transaction.errors.count, "error") %> prohibited this transaction from being saved:</h4>
+      <ul>
+        <% transaction.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :transaction_type %>
+    <%= f.select :transaction_type,
+                 options_for_select([['Income', 'income'], ['Expense', 'expense']], transaction.transaction_type),
+                 {},
+                 class: 'form-control',
+                 data: { 
+                   controller: 'transaction-type',
+                   action: 'change->transaction-type#updateCategories'
+                 } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :category_id %>
+    <%= f.collection_select :category_id,
+                          Category.all,
+                          :id,
+                          :name,
+                          { prompt: 'Select a category' },
+                          class: 'form-control',
+                          data: { 'transaction-type-target': 'categorySelect' } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :amount %>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+      </div>
+      <%= f.number_field :amount, step: '0.01', class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :date %>
+    <%= f.date_field :date, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :description %>
+    <%= f.text_area :description, class: 'form-control' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit class: 'btn btn-primary' %>
+    <%= link_to 'Back', transactions_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+
+<% content_for :styles do %>
+  <style>
+    .transaction-form {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group-text {
+      background-color: #e9ecef;
+    }
+
+    .form-actions {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+  </style>
+<% end %>
+
+<% content_for :scripts do %>
+  <script>
+    class TransactionTypeController {
+      static targets = ['categorySelect']
+
+      updateCategories(event) {
+        const type = event.target.value
+        const categorySelect = this.categorySelectTarget
+        const categories = Array.from(categorySelect.options)
+
+        categories.forEach(option => {
+          if (option.value === '') return
+          const category = <%= Category.all.to_json(only: [:id, :category_type]).html_safe %>
+            .find(c => c.id === parseInt(option.value))
+          
+          option.style.display = category.category_type === type ? '' : 'none'
+        })
+
+        // Reset selection if current category is not valid for new type
+        if (categorySelect.selectedOptions[0].style.display === 'none') {
+          categorySelect.value = ''
+        }
+      }
+    }
+
+    application.register('transaction-type', TransactionTypeController)
+  </script>
+<% end %> 

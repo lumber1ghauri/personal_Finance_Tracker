@@ -1,0 +1,78 @@
+<h1>Categories Management</h1>
+
+<div class="categories-container">
+  <div class="income-categories">
+    <h2>Income Categories</h2>
+    <div class="categories-list">
+      <% @income_categories.each do |category| %>
+        <div class="category-item">
+          <span class="category-name"><%= category.name %></span>
+          <div class="category-actions">
+            <%= link_to 'Edit', edit_category_path(category), class: 'btn btn-sm btn-primary' %>
+            <%= link_to 'Delete', category_path(category), 
+                method: :delete, 
+                data: { confirm: 'Are you sure?' }, 
+                class: 'btn btn-sm btn-danger' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="expense-categories">
+    <h2>Expense Categories</h2>
+    <div class="categories-list">
+      <% @expense_categories.each do |category| %>
+        <div class="category-item">
+          <span class="category-name"><%= category.name %></span>
+          <div class="category-actions">
+            <%= link_to 'Edit', edit_category_path(category), class: 'btn btn-sm btn-primary' %>
+            <%= link_to 'Delete', category_path(category), 
+                method: :delete, 
+                data: { confirm: 'Are you sure?' }, 
+                class: 'btn btn-sm btn-danger' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="add-category-button">
+  <%= link_to 'Add New Category', new_category_path, class: 'btn btn-success' %>
+</div>
+
+<% content_for :styles do %>
+  <style>
+    .categories-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .categories-list {
+      margin-top: 1rem;
+    }
+
+    .category-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: #f8f9fa;
+      border-radius: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .category-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .add-category-button {
+      margin-top: 2rem;
+      text-align: center;
+    }
+  </style>
+<% end %> 

@@ -1,0 +1,191 @@
+<h1>Financial Summary</h1>
+
+<div class="date-range-selector">
+  <%= form_tag summary_transactions_path, method: :get, class: 'filter-form' do %>
+    <div class="filter-group">
+      <label>Date Range:</label>
+      <%= date_field_tag :start_date, @start_date, class: 'form-control' %>
+      <span>to</span>
+      <%= date_field_tag :end_date, @end_date, class: 'form-control' %>
+    </div>
+    <%= submit_tag 'Update', class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<div class="summary-cards">
+  <div class="summary-card income">
+    <h3>Total Income</h3>
+    <div class="amount">
+      <%= number_to_currency(@total_income) %>
+    </div>
+  </div>
+
+  <div class="summary-card expense">
+    <h3>Total Expenses</h3>
+    <div class="amount">
+      <%= number_to_currency(@total_expense) %>
+    </div>
+  </div>
+
+  <div class="summary-card balance">
+    <h3>Net Balance</h3>
+    <div class="amount <%= @total_income >= @total_expense ? 'positive' : 'negative' %>">
+      <%= number_to_currency(@total_income - @total_expense) %>
+    </div>
+  </div>
+</div>
+
+<div class="charts-container">
+  <div class="chart-section">
+    <h2>Income by Category</h2>
+    <canvas id="incomeChart"></canvas>
+  </div>
+
+  <div class="chart-section">
+    <h2>Expenses by Category</h2>
+    <canvas id="expenseChart"></canvas>
+  </div>
+</div>
+
+<% content_for :styles do %>
+  <style>
+    .date-range-selector {
+      background-color: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-form {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .summary-card {
+      padding: 2rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .summary-card.income {
+      background-color: #f0fff4;
+    }
+
+    .summary-card.expense {
+      background-color: #fff5f5;
+    }
+
+    .summary-card.balance {
+      background-color: #ebf8ff;
+    }
+
+    .summary-card h3 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .amount {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .amount.positive {
+      color: #2f855a;
+    }
+
+    .amount.negative {
+      color: #c53030;
+    }
+
+    .charts-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .chart-section {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .chart-section h2 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+  </style>
+<% end %>
+
+<% content_for :scripts do %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const incomeData = <%= raw @income_by_category.to_json %>
+    const expenseData = <%= raw @expense_by_category.to_json %>
+
+    const createChart = (elementId, data, label, backgroundColor) => {
+      const ctx = document.getElementById(elementId).getContext('2d')
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            data: Object.values(data),
+            backgroundColor,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const value = context.raw
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0)
+                  const percentage = ((value / total) * 100).toFixed(1)
+                  return `${context.label}: $${value.toFixed(2)} (${percentage}%)`
+                }
+              }
+            }
+          }
+        }
+      })
+    }
+
+    // Generate colors for charts
+    const generateColors = (count) => {
+      const colors = []
+      for (let i = 0; i < count; i++) {
+        const hue = (i * 137.508) % 360 // Use golden angle approximation
+        colors.push(`hsl(${hue}, 70%, 60%)`)
+      }
+      return colors
+    }
+
+    // Create charts
+    const incomeColors = generateColors(Object.keys(incomeData).length)
+    const expenseColors = generateColors(Object.keys(expenseData).length)
+
+    createChart('incomeChart', incomeData, 'Income', incomeColors)
+    createChart('expenseChart', expenseData, 'Expenses', expenseColors)
+  </script>
+<% end %> 

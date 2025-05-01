@@ -1,0 +1,147 @@
+<h1>Transaction History</h1>
+
+<div class="filters">
+  <%= form_tag transactions_path, method: :get, class: 'filter-form' do %>
+    <div class="filter-group">
+      <label>Date Range:</label>
+      <%= date_field_tag :start_date, params[:start_date], class: 'form-control' %>
+      <span>to</span>
+      <%= date_field_tag :end_date, params[:end_date], class: 'form-control' %>
+    </div>
+
+    <div class="filter-group">
+      <label>Type:</label>
+      <%= select_tag :type, 
+          options_for_select([['All', ''], ['Income', 'income'], ['Expense', 'expense']], params[:type]),
+          class: 'form-control' %>
+    </div>
+
+    <div class="filter-group">
+      <label>Category:</label>
+      <%= select_tag :category_id,
+          options_for_select([['All', '']] + Category.all.map { |c| [c.name, c.id] }, params[:category_id]),
+          class: 'form-control' %>
+    </div>
+
+    <%= submit_tag 'Apply Filters', class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<div class="transactions-list">
+  <% @transactions.each do |transaction| %>
+    <div class="transaction-item <%= transaction.transaction_type %>">
+      <div class="transaction-date">
+        <%= transaction.date.strftime('%B %d, %Y') %>
+      </div>
+      <div class="transaction-details">
+        <div class="transaction-description">
+          <%= transaction.description %>
+          <span class="category-tag"><%= transaction.category.name %></span>
+        </div>
+        <div class="transaction-amount <%= transaction.transaction_type %>">
+          <%= number_to_currency(transaction.amount) %>
+        </div>
+      </div>
+      <div class="transaction-actions">
+        <%= link_to 'Edit', edit_transaction_path(transaction), class: 'btn btn-sm btn-primary' %>
+        <%= link_to 'Delete', transaction_path(transaction),
+            method: :delete,
+            data: { confirm: 'Are you sure?' },
+            class: 'btn btn-sm btn-danger' %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="add-transaction-button">
+  <%= link_to 'Add New Transaction', new_transaction_path, class: 'btn btn-success' %>
+</div>
+
+<% content_for :styles do %>
+  <style>
+    .filters {
+      background-color: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-form {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .transactions-list {
+      margin: 2rem 0;
+    }
+
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid #dee2e6;
+      gap: 1.5rem;
+    }
+
+    .transaction-item.income {
+      background-color: #f0fff4;
+    }
+
+    .transaction-item.expense {
+      background-color: #fff5f5;
+    }
+
+    .transaction-date {
+      min-width: 150px;
+    }
+
+    .transaction-details {
+      flex-grow: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .transaction-description {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .category-tag {
+      background-color: #e9ecef;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+    }
+
+    .transaction-amount {
+      font-weight: bold;
+    }
+
+    .transaction-amount.income {
+      color: #2f855a;
+    }
+
+    .transaction-amount.expense {
+      color: #c53030;
+    }
+
+    .transaction-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .add-transaction-button {
+      margin-top: 2rem;
+      text-align: center;
+    }
+  </style>
+<% end %> 

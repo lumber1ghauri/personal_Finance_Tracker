@@ -19,9 +19,24 @@
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="min-h-screen bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+      <% if notice %>
+        <div class="mb-4 rounded-lg bg-green-50 p-4 text-green-800" role="alert">
+          <%= notice %>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div class="mb-4 rounded-lg bg-red-50 p-4 text-red-800" role="alert">
+          <%= alert %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

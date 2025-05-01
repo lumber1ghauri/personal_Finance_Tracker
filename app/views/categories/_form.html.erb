@@ -1,0 +1,52 @@
+<%= form_with(model: category, local: true, class: 'category-form') do |f| %>
+  <% if category.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(category.errors.count, "error") %> prohibited this category from being saved:</h4>
+      <ul>
+        <% category.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :category_type %>
+    <%= f.select :category_type, 
+                 options_for_select([['Income', 'income'], ['Expense', 'expense']], category.category_type),
+                 {},
+                 class: 'form-control' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit class: 'btn btn-primary' %>
+    <%= link_to 'Back', categories_path, class: 'btn btn-secondary' %>
+  </div>
+<% end %>
+
+<% content_for :styles do %>
+  <style>
+    .category-form {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-actions {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+  </style>
+<% end %> 

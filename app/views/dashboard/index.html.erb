@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Finance Tracker</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+</head>
+<body>
+  <h1>Welcome to Your Dashboard</h1>
+
+  <div class="dashboard-summary">
+    <p><strong>Total Income:</strong> $<%= @total_income %></p>
+    <p><strong>Total Expense:</strong> $<%= @total_expense %></p>
+    <p><strong>Balance:</strong> $<%= @balance %></p>
+  </div>
+
+  <!-- Here, you can add more charts or lists as needed -->
+  <h2>Recent Transactions</h2>
+  <!-- Example, you'd loop through transactions and show them -->
+  <ul>
+    <li>Transaction 1 - $50</li>
+    <li>Transaction 2 - $100</li>
+    <li>Transaction 3 - $200</li>
+  </ul>
+
+  <footer>
+    <p>Powered by Rails</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# 1. Install necessary packages (Arch Linux)
+sudo pacman -Syu
+sudo pacman -S ruby rails nodejs yarn postgresql libpq
+
+# 2. Initialize and start PostgreSQL
+sudo -iu postgres
+initdb --locale=en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'
+exit
+sudo systemctl enable --now postgresql
+
+# 3. Create PostgreSQL role matching your username
+sudo -u postgres createuser archie -s
+
+# 4. Create a new Rails app with PostgreSQL
+rails new finance_tracker -d postgresql
+
+# 5. Move into project directory
+cd finance_tracker
+
+# 6. (Optional) Edit config/database.yml if custom settings are needed
+# nano config/database.yml
+
+# 7. Create the database
+rails db:create
+
+# 8. Start the Rails server
+rails server
+
+
