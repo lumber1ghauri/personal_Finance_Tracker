@@ -62,3 +62,4 @@ group :test do
   gem "selenium-webdriver"
 end
 gem 'devise'
+gem "cssbundling-rails", "~> 1.4"
