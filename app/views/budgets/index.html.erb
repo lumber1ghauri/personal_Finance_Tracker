@@ -1,0 +1,8 @@
+<h1>okayy Budgets</h1>
+
+<% @budgets.each do |budget| %>
+  <p><strong><%= budget.category %></strong> - Rs. <%= budget.amount %> on <%= budget.date %></p>
+  <p><%= budget.notes %></p>
+  <hr>
+<% end %>
+<%= link_to 'Add Budget', new_budget_path %>
