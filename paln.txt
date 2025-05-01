@@ -1,0 +1,153 @@
+🛠️ Step-by-Step Plan:
+1. Set Up the Rails Application
+First, let's get the basic project structure up and running.
+
+Task: Create a new Rails project.
+
+Command:
+
+bash
+Copy
+Edit
+rails new finance_tracker --database=postgresql
+Goal: Set up the Rails application with PostgreSQL as the database.
+
+2. Add Authentication (Devise)
+Since user authentication is a key feature, we’ll add Devise for sign-up, login, and password management.
+
+Task: Install Devise gem for authentication.
+
+Command:
+
+bash
+Copy
+Edit
+gem 'devise'
+Then run the following commands to generate the Devise views and models:
+
+bash
+Copy
+Edit
+rails generate devise:install
+rails generate devise User
+rails db:migrate
+Goal: Set up authentication with user sign-up and login pages.
+
+3. Create Transaction Model & Categories
+This is the core part of your app — managing income and expense records.
+
+Task: Create the Transaction model to store financial transactions.
+
+Command:
+
+bash
+Copy
+Edit
+rails generate model Transaction amount:decimal category:string transaction_type:string date:datetime user:references
+Add the user:references to associate transactions with users.
+
+Goal: Set up the model and run migrations.
+
+4. Add Categories for Transactions
+You want to allow users to categorize transactions (e.g., "Food", "Travel").
+
+Task: You can either hardcode categories or make them dynamic.
+
+For Dynamic Categories:
+
+Create a Category model.
+
+Create an association between Transaction and Category (one-to-many relationship).
+
+Goal: Allow users to assign transactions to categories.
+
+5. Set Up Basic Views & Controller Actions
+Now that we have the models, we need to create controllers and views.
+
+Task: Create a TransactionsController.
+
+In this controller, you'll handle actions like index (viewing transactions), new (adding a transaction), create, edit, and update.
+
+For the dashboard and transactions view:
+
+index.html.erb (list all transactions)
+
+new.html.erb (form to add new transactions)
+
+Goal: Display transactions in the dashboard.
+
+6. Create a Dashboard for Users
+On the dashboard, users should see a summary of their financial situation.
+
+Task: Build a simple DashboardController that:
+
+Displays total income/expenses
+
+Provides links to view individual transactions or add new ones
+
+Optionally displays monthly reports
+
+Goal: A clean overview of the user's finances.
+
+7. Generate Reports
+Generating monthly financial reports is a key feature.
+
+Task: Use Ruby's date and time features to filter transactions by month/year.
+
+You could use group_by to categorize transactions and display totals.
+
+Use a gem like Chartkick for charts (you mentioned charts earlier).
+
+Goal: Display spending patterns, income vs. expenses over time.
+
+8. Optional Features: Export to CSV and Budgeting Goals
+You can optionally add export functionality and budget goals for users.
+
+Task:
+
+Implement CSV export using ruby's CSV library.
+
+Create a model for setting budget goals (e.g., BudgetGoal model).
+
+Goal: Allow users to export their data or set goals.
+
+9. Styling the Application
+For the frontend, we can use Bootstrap or Tailwind (whichever you prefer).
+
+Task: Implement basic styles using Bootstrap or Tailwind for responsiveness.
+
+Goal: Make the app visually appealing and responsive.
+
+📅 Our Work Plan (in Phases)
+Phase 1: Setting Up Basics & Authentication
+
+Create the Rails app.
+
+Set up Devise authentication.
+
+Generate models for transactions and categories.
+
+Phase 2: Building Core Features
+
+Implement the Transactions controller and views (CRUD).
+
+Create the Dashboard with a financial summary.
+
+Start building monthly report views.
+
+Phase 3: Reports & Export Features
+
+Add monthly financial reports.
+
+Implement CSV export.
+
+Add budget goals (optional).
+
+Phase 4: Frontend Styling
+
+Integrate Bootstrap or Tailwind CSS for styling.
+
+Phase 5: Testing & Bug Fixes
+
+Test core features like authentication, transactions, and reports.
+
