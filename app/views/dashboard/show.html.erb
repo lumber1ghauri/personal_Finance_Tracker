@@ -1,0 +1,57 @@
+<div class="min-h-screen bg-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white shadow rounded-lg p-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-green-50 p-6 rounded-lg">
+          <h3 class="text-lg font-medium text-green-800">Total Income</h3>
+          <p class="text-3xl font-bold text-green-600">$<%= number_with_precision(@total_income, precision: 2) %></p>
+        </div>
+        
+        <div class="bg-red-50 p-6 rounded-lg">
+          <h3 class="text-lg font-medium text-red-800">Total Expenses</h3>
+          <p class="text-3xl font-bold text-red-600">$<%= number_with_precision(@total_expense, precision: 2) %></p>
+        </div>
+        
+        <div class="bg-blue-50 p-6 rounded-lg">
+          <h3 class="text-lg font-medium text-blue-800">Balance</h3>
+          <p class="text-3xl font-bold text-blue-600">$<%= number_with_precision(@balance, precision: 2) %></p>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+          <div class="space-y-3">
+            <%= link_to "Add Income", new_income_path, class: "block w-full text-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700" %>
+            <%= link_to "Add Expense", new_expense_path, class: "block w-full text-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700" %>
+            <%= link_to "View Budgets", budgets_path, class: "block w-full text-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+          </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Transactions</h3>
+          <div class="space-y-3">
+            <% @recent_transactions = current_user.transactions.order(created_at: :desc).limit(5) %>
+            <% if @recent_transactions.any? %>
+              <% @recent_transactions.each do |transaction| %>
+                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                  <div>
+                    <p class="font-medium"><%= transaction.description %></p>
+                    <p class="text-sm text-gray-500"><%= transaction.created_at.strftime("%b %d, %Y") %></p>
+                  </div>
+                  <p class="<%= transaction.amount.positive? ? 'text-green-600' : 'text-red-600' %>">
+                    $<%= number_with_precision(transaction.amount, precision: 2) %>
+                  </p>
+                </div>
+              <% end %>
+            <% else %>
+              <p class="text-gray-500">No recent transactions</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
