@@ -5,5 +5,4 @@ class DashboardController < ApplicationController
       @total_expense = 500
       @balance = @total_income - @total_expense
     end
-  end
-  
+end

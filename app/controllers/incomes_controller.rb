@@ -24,7 +24,7 @@ class IncomesController < ApplicationController
     @income = Income.new(income_params)
 
     if @income.save
-      redirect_to @income, notice: 'Income was successfully created.'
+      redirect_to @income, notice: "Income was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class IncomesController < ApplicationController
   # PATCH/PUT /incomes/1 or /incomes/1.json
   def update
     if @income.update(income_params)
-      redirect_to @income, notice: 'Income was successfully updated.'
+      redirect_to @income, notice: "Income was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -42,7 +42,7 @@ class IncomesController < ApplicationController
   # DELETE /incomes/1 or /incomes/1.json
   def destroy
     @income.destroy
-    redirect_to incomes_url, notice: 'Income was successfully deleted.'
+    redirect_to incomes_url, notice: "Income was successfully deleted."
   end
 
   private

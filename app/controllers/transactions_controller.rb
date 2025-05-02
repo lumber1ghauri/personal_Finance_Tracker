@@ -1,5 +1,5 @@
 class TransactionsController < ApplicationController
-  before_action :set_transaction, only: [:edit, :update, :destroy]
+  before_action :set_transaction, only: [ :edit, :update, :destroy ]
 
   def index
     @transactions = Transaction.includes(:category).order(date: :desc)
@@ -16,7 +16,7 @@ class TransactionsController < ApplicationController
   def create
     @transaction = Transaction.new(transaction_params)
     if @transaction.save
-      redirect_to transactions_path, notice: 'Transaction was successfully created.'
+      redirect_to transactions_path, notice: "Transaction was successfully created."
     else
       @categories = Category.all
       render :new
@@ -29,7 +29,7 @@ class TransactionsController < ApplicationController
 
   def update
     if @transaction.update(transaction_params)
-      redirect_to transactions_path, notice: 'Transaction was successfully updated.'
+      redirect_to transactions_path, notice: "Transaction was successfully updated."
     else
       @categories = Category.all
       render :edit
@@ -38,7 +38,7 @@ class TransactionsController < ApplicationController
 
   def destroy
     @transaction.destroy
-    redirect_to transactions_path, notice: 'Transaction was successfully deleted.'
+    redirect_to transactions_path, notice: "Transaction was successfully deleted."
   end
 
   def summary
@@ -48,15 +48,15 @@ class TransactionsController < ApplicationController
     @transactions = Transaction.by_date_range(@start_date, @end_date)
     @total_income = @transactions.income.total_income
     @total_expense = @transactions.expense.total_expense
-    
+
     @income_by_category = @transactions.income
       .joins(:category)
-      .group('categories.name')
+      .group("categories.name")
       .sum(:amount)
-    
+
     @expense_by_category = @transactions.expense
       .joins(:category)
-      .group('categories.name')
+      .group("categories.name")
       .sum(:amount)
   end
 
@@ -69,4 +69,4 @@ class TransactionsController < ApplicationController
   def transaction_params
     params.require(:transaction).permit(:amount, :date, :description, :transaction_type, :category_id)
   end
-end 
+end

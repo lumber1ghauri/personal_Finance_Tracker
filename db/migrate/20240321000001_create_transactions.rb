@@ -13,4 +13,4 @@ class CreateTransactions < ActiveRecord::Migration[7.0]
     add_index :transactions, :date
     add_index :transactions, :transaction_type
   end
-end 
+end
