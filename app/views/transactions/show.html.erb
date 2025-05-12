@@ -1,0 +1,29 @@
+<div class="container mt-4">
+  <div class="alert alert-success">
+    <i class="bi bi-check-circle-fill"></i> Transaction was successfully created.
+  </div>
+
+  <div class="card bg-dark text-white border-0 shadow-sm mb-4">
+    <div class="card-header border-bottom">
+      <h5 class="mb-0">Transaction Details</h5>
+    </div>
+    <div class="card-body">
+      <%
+=begin%>
+ <p><strong>Category:</strong><%= @transaction.category.name %> 
+<%
+=end%>
+<p><strong>Category:</strong> <%= @transaction.category&.name || "No category assigned" %></p>
+
+</p>
+      <p><strong>Date:</strong> <%= @transaction.date.strftime('%d %b %Y') %></p>
+      <p><strong>Amount:</strong> $<%= number_with_precision(@transaction.amount, precision: 2) %></p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <%= link_to 'Edit this transaction', edit_transaction_path(@transaction), class: "btn btn-warning btn-sm" %>
+      <%= link_to 'Back to transactions', transactions_path, class: "btn btn-secondary btn-sm" %>
+      <%= button_to 'Delete this transaction', transaction_path(@transaction), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm" %>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="card bg-dark text-white shadow-sm mt-4">
+  <div class="card-header border-bottom">
+    <h5 class="mb-0">Monthly Summary</h5>
+  </div>
+  <div class="card-body">
+    <table class="table table-dark table-bordered">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Total Income</th>
+          <th>Total Expense</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @monthly_data.each do |data| %>
+          <tr>
+            <td><%= data.month.strftime("%B %Y") %></td>
+            <td class="text-success">$<%= number_with_precision(data.total_income, precision: 2) %></td>
+            <td class="text-danger">$<%= number_with_precision(data.total_expense, precision: 2) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card bg-dark text-white shadow-sm mt-4">
+  <div class="card-header border-bottom">
+    <h5 class="mb-0">Income vs Expense Trend</h5>
+  </div>
+  <div class="card-body">
+    <canvas id="incomeExpenseChart" height="100"></canvas>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('incomeExpenseChart');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: <%= raw @chart_labels.to_json %>,
+        datasets: [
+          {
+            label: 'Income',
+            data: <%= raw @chart_income.to_json %>,
+            borderColor: 'rgba(0, 255, 132, 1)',
+            backgroundColor: 'rgba(0, 255, 132, 0.1)',
+            tension: 0.3,
+            fill: true
+          },
+          {
+            label: 'Expense',
+            data: <%= raw @chart_expense.to_json %>,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            tension: 0.3,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: 'white' } },
+          tooltip: { mode: 'index', intersect: false }
+        },
+        scales: {
+          x: { 
+            ticks: { 
+              color: 'white' 
+            }, 
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          },
+          y: { 
+            ticks: { 
+              color: 'white' 
+            },
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          }
+        }
+      }
+    });
+  });
+</script>

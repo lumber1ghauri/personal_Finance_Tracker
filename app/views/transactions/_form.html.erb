@@ -1,0 +1,26 @@
+<%= form_with model: @transaction, local: true do |f| %>
+  <div class="form-group">
+    <%= f.label :amount %>
+    <%= f.number_field :amount, step: "0.01", class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :category %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, { include_blank: "Select a category" }, { class: "form-control" } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :date %>
+    <%= f.date_select :date, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :transaction_type, "Type" %>
+    <%= f.radio_button :transaction_type, "income" %> Income
+    <%= f.radio_button :transaction_type, "expense" %> Expense
+  </div>
+
+  <%= f.hidden_field :account_id, value: current_account.id %> <!-- Automatically associate with the current user -->
+
+  <%= f.submit "Save Transaction", class: "btn btn-primary" %>
+<% end %>

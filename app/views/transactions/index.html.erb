@@ -1,0 +1,38 @@
+<h1 class="text-white mb-4">Transactions</h1>
+
+<%= link_to '➕ New Transaction', new_transaction_path, class: 'btn btn-success mb-3' %>
+
+<table class="table table-dark table-striped">
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @transactions.each do |transaction| %>
+      <tr>
+       <td><%= transaction.category.name if transaction.category.present? %></td>
+        <td>
+          <% if transaction.date.present? %>
+            <%= transaction.date.strftime('%b-%d-%y') %>
+          <% else %>
+            N/A
+          <% end %>
+        </td>
+        <td class="<%= transaction.amount.nil? || transaction.amount.negative? ? 'text-danger' : 'text-success' %>">
+          <%= number_to_currency(transaction.amount, unit: '$') if transaction.amount.present? %>
+          <% if transaction.amount.nil? %>
+            N/A
+          <% end %>
+        </td>
+        <td>
+          <%= link_to '✏️', edit_transaction_path(transaction), class: 'btn btn-sm btn-outline-light' %>
+          <%= link_to '🗑️', transaction_path(transaction), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

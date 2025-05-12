@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Categories</h2>
+    <%= link_to "+ New Category", new_category_path, class: "btn btn-success" %>
+  </div>
+
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @categories.each do |category| %>
+        <tr>
+          <td><%= category.name %></td>
+          <td>
+            <% if category.category_type == "Income" %>
+              <span class="badge bg-success">Income</span>
+            <% else %>
+              <span class="badge bg-danger">Expense</span>
+            <% end %>
+          </td>
+          <td class="d-flex justify-content-start">
+            <%= link_to '✏️', edit_category_path(category), class: 'btn btn-sm btn-outline-light me-2' %>
+            <%= button_to '🗑️', category_path(category), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

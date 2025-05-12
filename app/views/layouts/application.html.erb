@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+      body {
+        background-color: #111;
+        color: #fff;
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .sidebar {
+        background-color: #111;
+        height: 100vh;
+        padding: 1.5rem;
+        width: 240px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        box-shadow: 2px 0px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar:hover {
+        transform: translateX(0);
+      }
+
+      .sidebar .profile {
+        text-align: center;
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .sidebar .profile img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar .profile h6 {
+        margin-top: 10px;
+        color: #bbb;
+        font-size: 14px;
+      }
+
+      .sidebar .menu a {
+        color: #bbb;
+        text-decoration: none;
+        display: block;
+        margin: 12px 0;
+        font-weight: 500;
+        transition: color 0.3s ease, transform 0.3s ease;
+      }
+
+      .sidebar .menu a:hover {
+        color: #0dcaf0;
+        transform: translateX(5px);
+      }
+
+      .content {
+        margin-left: 260px;
+        padding: 2rem;
+        background-color: #1a1a1a;
+        min-height: 100vh;
+        transition: margin-left 0.3s ease;
+      }
+
+      .card {
+        background-color: #222;
+        border: none;
+        color: #fff;
+        transition: background-color 0.3s ease;
+      }
+
+      .card:hover {
+        background-color: #333;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .btn {
+        margin-top: 20px;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        border-radius: 30px;
+        transition: transform 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: scale(1.1);
+        background-color: #0dcaf0;
+        color: #fff;
+      }
+
+      .sidebar .menu a i {
+        font-size: 1.3rem;
+      }
+    </style>
+
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div class="profile">
+        <h1><strong>MONETRA</strong></h1>
+        <% if account_signed_in? %>
+          <h6><%= current_account.name.presence || current_account.username.presence || current_account.email %></h6>
+        <% else %>
+          <h6>Guest</h6>
+        <% end %>
+      </div>
+
+      <div class="menu">
+        <span class="text-success fw-bold">GENERAL</span>
+        <%= link_to raw('<i class="bi bi-speedometer2 me-2"></i> Dashboard'), dashboard_path, class: "text-white d-block mb-2" %>
+        <%= link_to raw('<i class="bi bi-folder me-2"></i> Categories'), categories_path, class: "text-white d-block mb-2" %>
+        <%= link_to raw('<i class="bi bi-arrow-left-right me-2"></i> Transactions'), transactions_path, class: "text-white d-block mb-2" %>
+
+        <span class="text-success fw-bold mt-3 d-block">EXTRAS</span>
+        <%= link_to raw('<i class="bi bi-bar-chart-line me-2"></i> Reports'), reports_path, class: "text-white d-block mb-2" %>
+        <%= link_to raw('<i class="bi bi-gear me-2"></i> Settings'), settings_path, class: "text-white d-block mb-2" %>
+        
+        <% if account_signed_in? %>
+          <%= link_to "Logout", destroy_account_session_path, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger d-block mt-3" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="content">
+      <%= yield %>
+    </div>
+  </body>
+</html>
