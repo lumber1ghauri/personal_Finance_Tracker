@@ -37,6 +37,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_10_152942) do
     t.index ["account_id"], name: "index_categories_on_account_id"
   end
 
+  create_table "preferences", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.boolean "dark_mode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_preferences_on_account_id"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.string "category"
     t.date "date"
@@ -62,5 +70,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_10_152942) do
   end
 
   add_foreign_key "categories", "accounts"
+  add_foreign_key "preferences", "accounts"
   add_foreign_key "transactions", "accounts"
 end
